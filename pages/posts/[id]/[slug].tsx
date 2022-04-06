@@ -1,11 +1,13 @@
 import { Post, PostService } from "algatest01-sdk"
 import { ResourceNotFoundError } from "algatest01-sdk/dist/errors"
 import { GetServerSideProps } from "next"
+import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
 
 
 interface PostProps extends NextPageProps {
   post?: Post.Detailed
+  host?: string
 }
 
 interface Params extends ParsedUrlQuery {
@@ -14,14 +16,16 @@ interface Params extends ParsedUrlQuery {
 }
 
 export default function PostPage(props: PostProps) {
-  if (props.error)
-    return <div style={{ color: 'red' }}>{props.error.message}</div>
-
-  return <>{props.post?.title}</>
+  return <>
+    <Head>
+      <link rel="canonical" href={`http://${props.host}/posts/${props.post?.id}/${props.post?.slug}`} />
+    </Head>
+    {props.post?.title}
+  </>
 }
 
 export const getServerSideProps: GetServerSideProps<PostProps, Params> =
-  async ({ params, res }) => {
+  async ({ params, req }) => {
     try {
       if (!params)
         return { notFound: true }
@@ -34,15 +38,10 @@ export const getServerSideProps: GetServerSideProps<PostProps, Params> =
 
       const post = await PostService.getExistingPost(postId)
 
-      if (slug !== post.slug) {
-        res.statusCode = 301;
-        res.setHeader('Location', `/posts/${post.id}/${post.slug}`);
-        return { props: {} }
-      }
-
       return {
         props: {
-          post: post
+          post,
+          host: req.headers.host
         },
       }
     } catch (error) {

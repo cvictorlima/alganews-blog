@@ -9,7 +9,8 @@ interface PostProps extends NextPageProps {
 }
 
 interface Params extends ParsedUrlQuery {
-  pid: string[]
+  id: string
+  slug: string
 }
 
 export default function PostPage(props: PostProps) {
@@ -20,18 +21,24 @@ export default function PostPage(props: PostProps) {
 }
 
 export const getServerSideProps: GetServerSideProps<PostProps, Params> =
-  async ({ params }) => {
+  async ({ params, res }) => {
     try {
       if (!params)
         return { notFound: true }
 
-      const [id, slug] = params.pid;
+      const { id, slug } = params;
 
       const postId = Number(id)
 
       if (isNaN(postId)) return { notFound: true }
 
       const post = await PostService.getExistingPost(postId)
+
+      if (slug !== post.slug) {
+        res.statusCode = 301;
+        res.setHeader('Location', `/posts/${post.id}/${post.slug}`);
+        return { props: {} }
+      }
 
       return {
         props: {

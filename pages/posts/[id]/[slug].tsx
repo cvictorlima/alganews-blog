@@ -3,6 +3,7 @@ import { ResourceNotFoundError } from "algatest01-sdk/dist/errors"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
+import Markdown from "../../../components/Markdown"
 import PostHeader from "../../../components/PostHeader"
 
 
@@ -30,6 +31,9 @@ export default function PostPage(props: PostProps) {
           title={post?.title}
           editor={post?.editor}
         />
+        <Markdown>
+          {post?.body}
+        </Markdown>
       </>
     )}
   </>

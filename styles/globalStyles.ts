@@ -73,6 +73,83 @@ export default createGlobalStyle`
               transparentize(0.9, p.theme.pageForeground)};
           }
         }
+      }
     }
   }
+
+  .MarkdownRenderer {
+    display: flex;
+    flex-direction: column;
+    max-width: 680px;
+    margin: 48px auto;
+    gap: 24px;
+
+    > * {
+      &::not(:last-child) {
+        margin-bottom: 24px;
+      }
+    }
+
+    p{
+      font-size: 18px;
+      line-height: 36px;
+
+    }
+
+    ul{
+      font-size: 18px;
+      line-height: 36px;
+      margin-left: 32px;
+    }
+
+    h2 {
+      font-size: 48px;
+      font-weight: 500;
+
+    }
+
+    h3 {
+      font-size: 36px;
+      font-weight: 500;
+    }
+    
+
+    h4 {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    h5,
+    h6 {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    a{
+      color: ${(p) => p.theme.primaryBackground};
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+    }
+
+    code:not([class^="language"]) {
+      color: ${(p) => p.theme.pageBackground};
+      background-color: ${(p) => p.theme.pageForeground};
+      padding: 4px 8px;
+      border-radius: ${(p) => p.theme.borderRadius};
+
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 300;
+      font-size: 14px;
+
+      white-space: nowrap;
+  }
+
+  img{
+    max-width: 100%;
+  }
+}
 `;

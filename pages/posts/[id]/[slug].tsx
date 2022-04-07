@@ -3,6 +3,7 @@ import { ResourceNotFoundError } from "algatest01-sdk/dist/errors"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
+import PostHeader from "../../../components/PostHeader"
 
 
 interface PostProps extends NextPageProps {
@@ -16,11 +17,21 @@ interface Params extends ParsedUrlQuery {
 }
 
 export default function PostPage(props: PostProps) {
+  const { post } = props
   return <>
     <Head>
       <link rel="canonical" href={`http://${props.host}/posts/${props.post?.id}/${props.post?.slug}`} />
     </Head>
-    {props.post?.title}
+    {post && (
+      <>
+        <PostHeader
+          thumbnail={post?.imageUrls.large}
+          createdAt={post?.createdAt}
+          title={post?.title}
+          editor={post?.editor}
+        />
+      </>
+    )}
   </>
 }
 
